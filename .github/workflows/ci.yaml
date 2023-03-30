@@ -114,7 +114,7 @@ jobs:
       - name: Get dependencies
         run: go mod download
       - name: Test
-        run: make test-codeß
+        run: make test-code
       # Make sure you put test kit action after your test execution step
       - name: Analyze Test and/or Coverage Results
         uses: runforesight/foresight-test-kit-action@v1
