@@ -93,6 +93,12 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
+      # Make sure you put workflow kit action on top of all the steps
+      - name: Collect Workflow Telemetry
+        uses: runforesight/foresight-workflow-kit-action@v1
+        if: ${{ always() }}
+        with:
+          api_key: 2cfd424b-7534-4022-bec4-417ccd6d1f74
       - name: Set up Go 1.x
         uses: actions/setup-go@v3.1.0
         with:
@@ -108,7 +114,18 @@ jobs:
       - name: Get dependencies
         run: go mod download
       - name: Test
-        run: make test-code
+        run: make test-codeß
+      # Make sure you put test kit action after your test execution step
+      - name: Analyze Test and/or Coverage Results
+        uses: runforesight/foresight-test-kit-action@v1
+        if: ${{ always() }}
+        with:
+          api_key: 2cfd424b-7534-4022-bec4-417ccd6d1f74
+          test_format: JSON
+          test_framework: GOLANG
+          test_path: <test_results_path_optional>
+          coverage_format: GOLANG
+          coverage_path: <coverage_results_path_optional>
 
   lint:
     name: Lint
